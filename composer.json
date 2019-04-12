@@ -1,0 +1,19 @@
+{
+    "name": "ced/etsy-magento2-integration",
+    "description": "Etsy Magento2 integration",
+    "require": {
+        "php": ">=5.5.9",
+        "inakiabt/etsy-php": ">=0.10"
+    },
+    "type": "magento2-module",
+    "version": "0.0.2",
+    "license": [
+        "EULA"
+    ],
+    "autoload": {
+    "files": [ "registration.php" ],
+        "psr-4": {
+            "Ced\\Etsy\\": ""
+        }
+    }
+}

@@ -1,0 +1,161 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement(EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category  Ced
+ * @package   Ced_Etsy
+ * @author    CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright Copyright CEDCOMMERCE(http://cedcommerce.com/)
+ * @license   http://cedcommerce.com/license-agreement.txt
+ */
+-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Ced_Etsy::Etsy"
+            title="Etsy Integration"
+            translate="title"
+            module="Ced_Etsy"
+            sortOrder="14"
+            resource="Ced_Etsy::Etsy"
+         />
+
+        <add id="Ced_Etsy::configuration"
+             title="Configuration"
+             translate="title"
+             module="Ced_Etsy"
+             sortOrder="1"
+             parent="Ced_Etsy::Etsy"
+             resource="Ced_Etsy::Etsy"
+        />
+
+        <add id="Ced_Etsy::etsy_configuration"
+             title="Etsy Configuration"
+             module="Ced_Etsy"
+             sortOrder="1"
+             parent="Ced_Etsy::configuration"
+             action="adminhtml/system_config/edit/section/etsy_config"
+             resource="Ced_Etsy::Etsy"
+        />
+
+            <add id="Ced_Etsy::product"
+                title="Products"
+                translate="title"
+                module="Ced_Etsy"
+                sortOrder="1"
+                parent="Ced_Etsy::Etsy"
+                resource="Ced_Etsy::Etsy"
+            />
+
+                <add id="Ced_Etsy::etsy_profile"
+                    title="Profile Manager"
+                    translate="title"
+                    module="Ced_Etsy"
+                    sortOrder="1"
+                    parent="Ced_Etsy::product"
+                    action="etsy/profile/index"
+                    resource="Ced_Etsy::Etsy"
+                />
+                <add id="Ced_Etsy::etsy_product"
+                    title="Product Manager"
+                    translate="title"
+                    module="Ced_Etsy"
+                    sortOrder="5"
+                    parent="Ced_Etsy::product"
+                    action="etsy/product/index"
+                    resource="Ced_Etsy::Etsy"
+                />
+                <add id="Ced_Etsy::etsy_third_party_product"
+                     title="Third Party Product"
+                     translate="title"
+                     module="Ced_Etsy"
+                     sortOrder="5"
+                     parent="Ced_Etsy::product"
+                     action="etsy/product/thirdpartylisting"
+                     resource="Ced_Etsy::Etsy"
+                />
+
+            <add id="Ced_Etsy::orders"
+                title="Orders"
+                translate="title"
+                module="Ced_Etsy"
+                sortOrder="3"
+                parent="Ced_Etsy::Etsy"
+                resource="Ced_Etsy::Etsy"
+             />
+
+                <add id="Ced_Etsy::order_listing"
+                    title="Order Manager"
+                    translate="title"
+                    module="Ced_Etsy"
+                    sortOrder="1"
+                    parent="Ced_Etsy::orders"
+                    action="etsy/order/index"
+                    resource="Ced_Etsy::Etsy"
+                 />
+
+
+            <add id="Ced_Etsy::developer"
+             title="Developer Options"
+             module="Ced_Etsy"
+             sortOrder="20"
+             parent="Ced_Etsy::Etsy"
+             resource="Ced_Etsy::Etsy"
+            />
+
+                <add id="Ced_Etsy::cron_scheduler"
+                    title="Cron Logs"
+                    translate="title"
+                    module="Ced_Etsy"
+                    sortOrder="1"
+                    parent="Ced_Etsy::developer"
+                    action="etsy/cron/index"
+                    resource="Ced_Etsy::Etsy"
+                 />
+
+                 <add id="Ced_Etsy::inv_scheduler"
+                    title="Inventory Cron Scheduler"
+                    translate="title"
+                    module="Ced_Etsy"
+                    sortOrder="1"
+                    parent="Ced_Etsy::developer"
+                    action="etsy/cron/scheduler"
+                    resource="Ced_Etsy::Etsy"
+                 />
+
+
+            <add id="Ced_Etsy::extra"
+             title="Extras"
+             module="Ced_Etsy"
+             sortOrder="25"
+             parent="Ced_Etsy::Etsy"
+             resource="Ced_Etsy::Etsy"
+            />
+                <add id="Ced_Etsy::knowledge_base"
+                     title="Help And Support"
+                     module="Ced_Etsy"
+                     sortOrder="2"
+                     parent="Ced_Etsy::extra"
+                     action="etsy/request/help"
+                     resource="Ced_Etsy::Etsy"
+                />
+
+                <add id="Ced_Etsy::shipping_template_base"
+                     title="Shipping Template"
+                     module="Ced_Etsy"
+                     sortOrder="2"
+                     parent="Ced_Etsy::extra"
+                     action="etsy/shipping/"
+                     resource="Ced_Etsy::Etsy"
+                />
+    </menu>
+</config>

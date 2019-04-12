@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement(EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category  Ced
+ * @package   Ced_Etsy
+ * @author    CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright Copyright CEDCOMMERCE(http://cedcommerce.com/)
+ * @license   http://cedcommerce.com/license-agreement.txt
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+	<default>
+		<system>
+            <license>
+                <use_https>0</use_https>
+                <license_url>etsy/main/license</license_url>
+                <activate_url>cedcommerce.com/licensing/validate/</activate_url>
+                <validate_url>cedcommerce.com/licensing/validate/auto</validate_url>
+            </license>
+        </system>
+		<cedcore>
+            <feeds_group>
+                <feeds>INFO,PROMO,UPDATE_RELEASE,NEW_RELEASE,INSTALLED_UPDATE</feeds>
+            </feeds_group>
+        </cedcore>
+		<etsy_config>
+			<etsy_setting>
+				<store_language>en</store_language>
+				<active_products>0</active_products>
+			</etsy_setting>
+			<product_upload>
+				<chunk_size>5</chunk_size>
+			</product_upload>
+			<etsy_order>
+				<auto_fetch>1</auto_fetch>
+				<track_no_available>1</track_no_available>
+			</etsy_order>
+			<product_sync>
+				<inv_sync>1</inv_sync>
+			</product_sync>
+		</etsy_config>
+		<carriers>
+			<shipbyetsy>
+				<active>1</active>
+				<sallowspecific>0</sallowspecific>
+				<name>Etsy Shipping Method(Default)</name>
+				<title>Etsy Shipping Method</title>
+				<model>Ced\Etsy\Model\Carrier\ShipbyEtsy</model>
+			</shipbyetsy>
+		</carriers>
+		<payment>
+			<paybyetsy>
+				<active>1</active>
+				<model>Ced\Etsy\Model\Payment\PaybyEtsy</model>
+				<order_status>Processing</order_status>
+				<title>Etsy Payment Method(Default)</title>
+				<payment_action>sale</payment_action>
+				<allowspecific>0</allowspecific>
+			</paybyetsy>
+    </payment>
+  </default> 
+</config>

@@ -1,0 +1,70 @@
+<?php
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement(EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_Etsy
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CEDCOMMERCE(http://cedcommerce.com/)
+ * @license     http://cedcommerce.com/license-agreement.txt
+ */
+/**
+ * @see Ced\Etsy\Block\Adminhtml\Config\Save
+ */
+?>
+<script>
+    require(['prototype'], function () {
+
+        function saveToEtsy() {
+            var validationMessage = $('validation_result');
+
+            params = {
+                consumerKey: $('<?php  echo $block->escapeHtml($block->getCusumer()); ?>').value,
+                consumerSecretKey: $('<?php  echo $block->escapeHtml($block->getSecret()); ?>').value,
+                verifierCode: $('<?php echo $block->escapeHtml($block->getVerifier()); ?>').value,
+                shopName : $('<?php echo $block->escapeHtml($block->getshop()); ?>').value,
+                userName : $('<?php echo $block->escapeHtml($block->getuser()); ?>').value,
+                token : $('<?php echo $block->escapeHtml($block->gettoken()); ?>').value,
+                tokenSecret : $('<?php echo $block->escapeHtml($block->gettokenSecret()); ?>').value,
+            };
+            new Ajax.Request('<?php  echo $block->escapeXssInUrl($block->getAjaxUrl()) ?>',
+                {
+                    parameters: params,
+                    onSuccess: function (response) {
+                        try {
+                            if (response.responseText.isJSON()) {
+                                if (response.responseText.evalJSON().msg == "success") {
+                                    window.location = "";
+
+                                } else if (response.responseText.evalJSON().msg == "error") {
+                                    var result = response.responseText.evalJSON().data;
+                                    validationMessage.removeClassName('hidden').addClassName('error')
+                                }
+                            }
+                        } catch (e) {
+                            validationMessage.removeClassName('hidden').addClassName('error')
+                        }
+                        validationMessage.update(result);
+                    }
+                });
+        }
+      window.saveToEtsy = saveToEtsy;
+    //]]>
+});
+
+
+</script>
+        <div class="actions actions-validate">
+    <div id="validation_result" class="message-validation hidden"></div>
+    <button onclick="saveToEtsy(); return false;" class="action-validate" type="button"
+            id="<?php echo $block->getHtmlId() ?>">
+        <span><?php echo $block->escapeHtml($block->getButtonLabel()) ?></span>
+    </button>
+</div>

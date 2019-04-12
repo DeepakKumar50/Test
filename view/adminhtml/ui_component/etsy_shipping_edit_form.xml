@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">etsy_shipping_edit_form.etsy_shipping_form_data_source</item>
+            <item name="deps" xsi:type="string">etsy_shipping_edit_form.etsy_shipping_form_data_source</item>
+        </item>
+        <item name="buttons" xsi:type="array">
+            <item name="save" xsi:type="array">
+                <item name="name" xsi:type="string">add</item>
+                <item name="label" xsi:type="string" translate="true">Edit data</item>
+                <item name="class" xsi:type="string">primary</item>
+            </item>
+        </item>
+        <item name="label" xsi:type="string" translate="true">Etsy Shipping Information</item>
+        <item name="config" xsi:type="array">
+            <item name="dataScope" xsi:type="string">data</item>
+            <item name="namespace" xsi:type="string">etsy_shipping_form</item>
+            <item name="type" xsi:type="string">tabs</item>
+        </item>
+        <item name="template" xsi:type="string">templates/form/collapsible</item>
+    </argument>
+    <dataSource name="etsy_shipping_form_data_source">
+        <argument name="dataProvider" xsi:type="configurableObject">
+            <argument name="class" xsi:type="string">Ced\Etsy\Ui\DataProvider\Shipping\ShippingForm</argument>
+            <argument name="name" xsi:type="string">etsy_shipping_form_data_source</argument>
+            <argument name="primaryFieldName" xsi:type="string">id</argument>
+            <argument name="requestFieldName" xsi:type="string">id</argument>
+        </argument>
+        <argument name="data" xsi:type="array">
+            <item name="js_config" xsi:type="array">
+                <item name="component" xsi:type="string">Magento_Ui/js/form/provider</item>
+            </item>
+        </argument>
+        <settings>
+
+            <submitUrl path="etsy/shipping/save"/>
+        </settings>
+    </dataSource>
+    <fieldset name="info_content">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="label" xsi:type="string" translate="true">Info</item>
+                <item name="collapsible" xsi:type="boolean">true</item>
+                <item name="sortOrder" xsi:type="number">1</item>
+            </item>
+        </argument>
+        <!--<container name="info_message_container" >
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="sortOrder" xsi:type="number">1</item>
+                </item>
+            </argument>
+            <field name="id">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="visible" xsi:type="boolean">false</item>
+                        <item name="dataType" xsi:type="string">text</item>
+                        <item name="formElement" xsi:type="string">input</item>
+                        <item name="source" xsi:type="string">etsy_shipping_form_data_source</item>
+                    </item>
+                </argument>
+            </field>
+            &lt;!&ndash;<htmlContent name="html_content">
+                <argument name="block" xsi:type="object">Namespace\Module\Block\Adminhtml\Shipping\Form\InfoContent</argument>
+            </htmlContent>&ndash;&gt;
+        </container>-->
+    </fieldset>
+    <fieldset name="shipping_form">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="collapsible" xsi:type="boolean">false</item>
+                <item name="label" xsi:type="string" translate="true">Shipping Template Details</item>
+                <item name="sortOrder" xsi:type="number">20</item>
+            </item>
+        </argument>
+        <field name="id">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="visible" xsi:type="boolean">false</item>
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="source" xsi:type="string">etsy_shipping_form_data_source</item>
+                </item>
+            </argument>
+        </field>
+        <field name="title">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Title</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="tooltip" xsi:type="array">
+                        <item name="description" xsi:type="string">This is the Title for your Template which should always be unique.</item>
+                    </item>
+                </item>
+            </argument>
+            <settings>
+                <validation>
+                    <rule name="required-entry" xsi:type="boolean">true</rule>
+                </validation>
+            </settings>
+        </field>
+        <field name="origin_country_id">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">Ced\Etsy\Model\Config\Country</item>
+                <item name="config" xsi:type="array">
+                    <item name="formElement" xsi:type="string">select</item>
+                    <item name="label" xsi:type="string" translate="true">Origin Country</item>
+                    <item name="tooltip" xsi:type="array">
+                        <item name="description" xsi:type="string">The country you're shipping from.</item>
+                    </item>
+                </item>
+            </argument>
+            <settings>
+                <validation>
+                    <rule name="required-entry" xsi:type="boolean">true</rule>
+                </validation>
+            </settings>
+        </field>
+        <field name="destination_country_id">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">Ced\Etsy\Model\Config\Country</item>
+                <item name="config" xsi:type="array">
+                    <item name="formElement" xsi:type="string">select</item>
+                    <item name="label" xsi:type="string" translate="true">Destination Country</item>
+                    <item name="tooltip" xsi:type="array">
+                        <item name="description" xsi:type="string">The country you're shipping to.</item>
+                    </item>
+                </item>
+            </argument>
+            <!--<settings>
+                <validation>
+                    <rule name="required-entry" xsi:type="boolean">true</rule>
+                </validation>
+            </settings>-->
+        </field>
+        <field name="min_processing_days">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Min Processing Days</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="tooltip" xsi:type="array">
+                        <item name="description" xsi:type="string">Once purchased, the minimum amount of time to process the order.</item>
+                    </item>
+                </item>
+            </argument>
+            <settings>
+                <validation>
+                    <rule name="required-entry" xsi:type="boolean">true</rule>
+                </validation>
+            </settings>
+        </field>
+        <field name="max_processing_days">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Max Processing Days</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="tooltip" xsi:type="array">
+                        <item name="description" xsi:type="string">Once purchased, the maximum amount of time to process the order.</item>
+                    </item>
+                </item>
+            </argument>
+            <settings>
+                <validation>
+                    <rule name="required-entry" xsi:type="boolean">true</rule>
+                </validation>
+            </settings>
+        </field>
+        <field name="primary_cost">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Primary Cost</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="tooltip" xsi:type="array">
+                        <item name="description" xsi:type="string">One time amount.</item>
+                    </item>
+                    <item name="disabled" xsi:type="boolean">true</item>
+                </item>
+            </argument>
+            <settings>
+                <validation>
+                    <rule name="required-entry" xsi:type="boolean">true</rule>
+                </validation>
+            </settings>
+        </field>
+        <field name="secondary_cost">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Secondary Cost</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="tooltip" xsi:type="array">
+                        <item name="description" xsi:type="string">This Amount will be added on top of the one time amount, for each additional amount</item>
+                    </item>
+                    <item name="disabled" xsi:type="boolean">true</item>
+                </item>
+            </argument>
+            <settings>
+                <validation>
+                    <rule name="required-entry" xsi:type="string">true</rule>
+                </validation>
+                <!-- <imports>
+                     <link name="disabled">${ $.provider}:data.do_we_hide_it</link>
+                 </imports>-->
+            </settings>
+        </field>
+    </fieldset>
+</form>

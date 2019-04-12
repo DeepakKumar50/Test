@@ -1,0 +1,313 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement(EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_Etsy
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CEDCOMMERCE(http://cedcommerce.com/)
+ * @license     http://cedcommerce.com/license-agreement.txt
+ * @license     http://cedcommerce.com/license-agreement.txt
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="cedcommerce" translate="label" sortOrder="1">
+            <label>Cedcommerce</label>
+        </tab>
+        <section id="cedcore" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1"
+                 showInStore="0">
+            <tab>cedcommerce</tab>
+            <label>Installed Extensions</label>
+            <resource>Ced_Etsy::Etsy</resource>
+            <group id="installed_extensions" translate="label" type="text" sortOrder="1" showInDefault="1"
+                   showInWebsite="1" showInStore="0">
+                <label>Installed Extensions</label>
+                <frontend_model>Ced\Etsy\Block\Extensions</frontend_model>
+            </group>
+        </section>
+        <!-- section start for General Tab in Cedcommerce section -->
+        <section id="ced_general" translate="label" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>General Setting</label>
+            <tab>cedcommerce</tab>
+            <resource>Ced_Etsy::Etsy</resource>
+            <group id="feed_group" translate="label" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Notifications</label>
+                <field id="feeds" translate="label" type="multiselect" sortOrder="1" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>I'd like to be informed by CedCommerce about:</label>
+                    <source_model>Ced\Etsy\Model\Config\Type</source_model>
+                </field>
+            </group>
+            <group id="extensions_groups" translate="label" type="text" sortOrder="3" showInDefault="1"
+                   showInWebsite="1" showInStore="1">
+                <label>CedCommerce Extensions Store</label>
+                <field id="extensions" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <frontend_model>Ced\Etsy\Block\Cedcommerce\Store</frontend_model>
+                </field>
+            </group>
+        </section>
+        <!-- section start for General Tab in Cedcommerce section -->
+
+        <!-- section start for Etsy Configuration Tab in Cedcommerce section -->
+        <section id="etsy_config" translate="label" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Etsy Configuration</label>
+            <tab>cedcommerce</tab>
+            <resource>Ced_Etsy::Etsy</resource>
+
+            <!-- Etsy Merchant/Developer settings -->
+
+            <group id="etsy_setting" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="0"
+                   showInStore="0">
+                <label>Etsy Merchant/Developer Settings</label>
+
+                <field id="consumer_key" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="0"
+                       showInStore="0">
+                    <label>Keystring</label>
+                    <tooltip>Please enter etsy Keystring</tooltip>
+                    <validate>required-entry</validate>
+                </field>
+
+                <field id="consumer_secret_key" translate="label" type="text" sortOrder="2" showInDefault="1"
+                       showInWebsite="0" showInStore="0">
+                    <label>Shared Secret</label>
+                    <tooltip>Please enter etsy shared secret key</tooltip>
+                    <validate>required-entry</validate>
+                </field>
+
+                <field id="access_token" translate="label" type="text" sortOrder="5.5" showInDefault="1" showInWebsite="0"
+                       showInStore="0">
+                    <label>Access Token</label>
+                    <tooltip>Access Token wiil be fill when you save Configuration</tooltip>
+                </field>
+
+                <field id="access_token_secret" translate="label" type="text" sortOrder="6" showInDefault="1"
+                       showInWebsite="0" showInStore="0">
+                    <label>Access Token Secret</label>
+                    <tooltip>Access Token Secret wiil be fill when you save Configuration</tooltip>
+                </field>
+
+                <field id="etsy_verifiercode" translate="label" type="text" sortOrder="7" showInDefault="1"
+                       showInWebsite="0" showInStore="0">
+                    <label>Verifier Code</label>
+                    <tooltip>Please get the Verified Code</tooltip>
+                </field>
+                <field id="user_name" translate="label" type="text" sortOrder="8" showInDefault="1"
+                       showInWebsite="0" showInStore="0">
+                    <label>User Name</label>
+                    <tooltip>Please enter etsy User Name</tooltip>
+                    <validate>required-entry</validate>
+                </field>
+                <field id="shop_name" translate="label" type="text" sortOrder="9" showInDefault="1"
+                       showInWebsite="0" showInStore="0">
+                    <label>Shop Name</label>
+                    <tooltip>Please enter etsy Shop Name</tooltip>
+                    <validate>required-entry</validate>
+                </field>
+                <field id="connect_account" translate="button_label" sortOrder="10.5" showInWebsite="0"
+                       showInDefault="1" showInStore="0">
+                    <button_label>Fetch Token</button_label>
+                    <frontend_model>Ced\Etsy\Block\Adminhtml\Config\Connect</frontend_model>
+                </field>
+                <field id="country" translate="label" type="select" sortOrder="11" showInDefault="1" showInWebsite="0"
+                       showInStore="0">
+                    <label>Country</label>
+                    <source_model>Ced\Etsy\Model\Config\Country</source_model>
+                </field>
+                <field id="store_language" translate="label" type="select" sortOrder="11.5" showInDefault="1" showInWebsite="0"
+                       showInStore="0">
+                    <label>Etsy Store Language</label>
+                    <source_model>Ced\Etsy\Model\Config\Language</source_model>
+                </field>
+                <field id="storeid" translate="label" type="select" sortOrder="12" showInDefault="1" showInWebsite="0"
+                       showInStore="0">
+                    <label>Select Store</label>
+                    <source_model>Magento\Config\Model\Config\Source\Store</source_model>
+                </field>
+                <field id="fetch_category" translate="button_label" sortOrder="13" showInDefault="1" showInWebsite="1"
+                       showInStore="0">
+                    <button_label>Fetch Category</button_label>
+                    <frontend_model>Ced\Etsy\Block\Adminhtml\Config\FetchCategory</frontend_model>
+                </field>
+                <field id="active_products" translate="label" type="text" sortOrder="20" showInDefault="1"
+                       showInWebsite="0" showInStore="0">
+                    <label>Active Products on Etsy</label>
+                    <tooltip>Please enter count of active products(approx)</tooltip>
+                </field>
+            </group>
+
+            <!--End of Etsy Merchant/Developer settings -->
+
+            <!-- Product Upload settings -->
+
+            <group id="product_setting" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1"
+                   showInStore="0">
+                <label>Product Upload Settings</label>
+                <field id="shipping_template" translate="label" type="select" sortOrder="15" showInDefault="1"
+                       showInWebsite="0" showInStore="0">
+                    <label>Select Shipping Template</label>
+                    <source_model>Ced\Etsy\Model\Config\ShippingTemplate</source_model>
+                    <!-- <validate>required-entry</validate> -->
+                </field>
+                <field id="shop_section_id" translate="label" type="select" sortOrder="16" showInDefault="1"
+                       showInWebsite="0" showInStore="0">
+                    <label>Select Shop Section</label>
+                    <source_model>Ced\Etsy\Model\Config\ShopSection</source_model>
+                </field>
+                <field id="who_made" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="0"
+                       showInStore="0">
+                    <label>Who Made</label>
+                    <source_model>Ced\Etsy\Model\Config\WhoMade</source_model>
+                    <validate>required-entry</validate>
+                </field>
+                <field id="when_made" translate="label" type="select" sortOrder="2" showInDefault="1" showInWebsite="0"
+                       showInStore="0">
+                    <label>When Made</label>
+                    <source_model>Ced\Etsy\Model\Config\WhenMade</source_model>
+                    <validate>required-entry</validate>
+                </field>
+                <field id="state" translate="label" type="select" sortOrder="3" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>State</label>
+                    <source_model>Ced\Etsy\Model\Config\State</source_model>
+                    <validate>required-entry</validate>
+                </field>
+                <field id="product_price" translate="label" type="select" sortOrder="5" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Product Price</label>
+                    <source_model>Ced\Etsy\Model\Source\Selprice</source_model>
+                    <comment><![CDATA[Select to send different product price to <b>etsy.com</b>]]></comment>
+                </field>
+                <field id="fix_price" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Modify by Fix Price</label>
+                    <validate>required-entry validate-number</validate>
+                    <depends>
+                        <field id="product_price" separator=",">plus_fixed,min_fixed</field>
+                    </depends> 
+                </field>
+                <field id="percentage_price" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Modify by Percenctage Price</label>
+                    <validate>required-entry validate-number</validate>
+                    <comment><![CDATA[Numeric value Required for <b>Add/subtract % on Magento price</b> 5 for Example: Magento price +/- 5% of Magento price.<b>]]></comment>
+                    <depends>
+                        <field id="product_price" separator=",">plus_per,min_per</field>
+                    </depends>
+                </field>
+                <field id="different_price" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Map Price Attribute</label>
+                    <validate>required-entry</validate>
+                    <comment><![CDATA[<b>Attribute Code Required in case of <b>Custom Fixed Price</b>]]></comment>
+                    <depends>
+                        <field id="product_price">differ</field>
+                    </depends>
+                </field>
+                <field id="product_inventory" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Product Inventory</label>
+                    <source_model>Ced\Etsy\Model\Source\Selinv</source_model>
+                    <comment><![CDATA[Select to send different product inventory to <b>etsy.com</b>]]></comment>
+                </field>
+
+                <!--End of Product Upload settings -->
+
+                <field id="fix_qty" translate="label" type="text" sortOrder="21" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Modify by Fix Inventory</label>
+                    <validate>required-entry validate-number</validate>
+                    <depends>
+                        <field id="product_inventory" separator=",">plusfixed,minfixed</field>
+                    </depends> 
+                </field>
+                <field id="different_qty" translate="label" type="text" sortOrder="22" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Map Inventory Attribute</label>
+                    <validate>required-entry</validate>
+                    <comment><![CDATA[<b>Attribute Code Required in case of <b>Custom Fixed Inventory</b>]]></comment>
+                    <depends>
+                        <field id="product_inventory">differ_attr</field>
+                    </depends>
+                </field>
+            </group>
+            <group id="etsy_order" translate="label" type="text" sortOrder="45" showInDefault="1" showInWebsite="1"
+                   showInStore="0">
+                <label>Etsy Order Setting</label>
+                <field id="order_notify_email" translate="label comment" type="text" sortOrder="1" showInDefault="1"
+                       showInWebsite="0" showInStore="0">
+                    <label>Order Notification Email</label>
+                    <validate>required-entry</validate>
+                </field>
+                <field id="order_id_prefix" translate="label" type="text" sortOrder="2" showInDefault="1">
+                    <label>Etsy Order Id Prefix</label>
+                    <comment>Prefix for Etsy Order Increment ID</comment>
+                </field>
+                <field id="auto_fetch" translate="label comment" type="select" sortOrder="5" showInDefault="1"
+                       showInWebsite="0" showInStore="0">
+                    <label>Auto Order Fetch</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                     <comment>Auto fetch order from Etsy</comment>
+                </field>
+                <field id="track_no_available" translate="label comment" type="select" sortOrder="10" showInDefault="1"
+                       showInWebsite="0" showInStore="0">
+                    <label>Tracking Number Available</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                     <comment>Tracking Number Required for Shipment</comment>
+                </field>
+            </group>            
+            <group id="product_sync" translate="label" type="text" sortOrder="46" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Cron Setting</label>
+                <field id="inv_sync" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Auto Inventory Sync</label>
+                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                     <comment>Auto Update inventory on Etsy While Product Edit</comment>
+                </field>
+            </group>
+        </section>
+        <!-- section end for Etsy Cofiguration Tab in Cedcommerce Tab -->
+
+        <!-- section start for Shipping Methods Tab in Sales Tab -->
+        <section id="carriers">
+            <group id="shipbyetsy" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1"
+                   showInStore="1">
+                <label>Etsy Payment Method(Default)</label>
+                <field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="title" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Title</label>
+                </field>
+            </group>
+        </section>
+        <!-- section end for Shipping Methods Tab in Sales Tab -->
+
+        <!-- section start for Payment Methods Tab in Sales Tab -->
+        <section id="payment">
+            <group id="paybyetsy" translate="label" type="text" sortOrder="200" showInDefault="1" showInWebsite="1"
+                   showInStore="1">
+                <label>Etsy</label>
+                <field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="title" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Title</label>
+                </field>
+                <field id="order_status" translate="label" type="select" sortOrder="3" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>New order status</label>
+                    <source_model>Magento\Sales\Model\Config\Source\Order\Status</source_model>
+                </field>
+            </group>
+        </section>
+        <!-- section end for Payment Methods Tab in Sales Tab -->
+    </system>
+</config>

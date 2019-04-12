@@ -1,0 +1,156 @@
+<?php
+
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement(EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category  Ced
+ * @package   Ced_Etsy
+ * @author    CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright Copyright CEDCOMMERCE(http://cedcommerce.com/)
+ * @license   http://cedcommerce.com/license-agreement.txt
+ */
+
+$baseUrl = $block->getUrl('*/product/index');
+$successImg = $block->getViewFileUrl('Ced_Etsy::images/fam_bullet_success.gif');
+$errorImg = $block->getViewFileUrl('Ced_Etsy::images/error_msg_icon.gif');
+$loaderImg = $block->getViewFileUrl('Ced_Etsy::images/rule-ajax-loader.gif');
+?>
+<style type="text/css">
+    . ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    . ul li {
+        border: 1px solid #ccc;
+        margin: 2px;
+        padding: 2px 2px 2px 2px;
+        font: normal 12px sans-serif;
+    }
+
+    . img {
+        margin-right: 5px;
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-12" style="margin-top: 10px;">
+        <div class="panel panel-default">
+            <div class="content-header panel-heading col-md-12 uptransform">
+                <div class="col-md-6" style="font-size:17px;line-height:31px; margin-top:0; float: left;">
+                    <?php echo __('Etsy to Magento Products Status Sync'); ?>
+                </div>
+                <div class="col-md-6 buttons_scb" style="text-align:right; float: right;">
+                    <button onclick="setLocation('<?php echo $block->escapeUrl($baseUrl); ?>')"
+                            class="btn btn-info uptransform"
+                            type="button"
+                            title="<?php echo __('Back'); ?>">
+                        <span><?php echo __('Back'); ?></span>
+                    </button>
+                </div>
+                <div style="clear:both"></div>
+            </div>
+            <div class="block-content panel-body ">
+                <ul style="list-style: none;">
+                    <li id="wait_msg" style="background-color:#Fff; list-style: none;">
+                        <img src="<?php echo $block->getViewFileUrl(
+                            'Ced_Etsy::images/note_msg_icon.gif'
+                        ); ?>" class="v-middle" style="margin-right:5px"/>
+                        <?php echo __("Etsy Product's Status on Magento, please wait..."); ?>
+                    </li>
+                    <li style="background-color:#FFD; list-style: none;">
+                        <img src="<?php echo $block->getViewFileUrl(
+                            'Ced_Etsy::images/fam_bullet_error.gif'
+                        ); ?>"
+                             class="v-middle" style="margin-right:5px"/>
+                        <?php echo __("Warning: Please do not close the window while data is uploading"); ?>
+                    </li>
+                </ul>
+
+                <ul id="profileRows" style="list-style: none;">
+                    <li style="background-color:#DDF; list-style: none;" id="update_row">
+                        <img class="v-middle" id="status_image" src="<?php echo $loaderImg ?>">
+                        <span id="update_status" class="text"><?php echo __("Updating..."); ?></span>
+                    </li>
+                    <li id="liFinished" style="display:none;background-color:#Fff; list-style: none;">
+                        <img src="<?php echo $block->getViewFileUrl(
+                            'Ced_Etsy::images/note_msg_icon.gif'
+                        ); ?>"
+                             class="v-middle" style="margin-right:5px"/>
+                        <?php echo __("Finished Product Status Sync on Magento"); ?>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    require([
+        'prototype'
+    ], function () {
+        var countOfSuccess = 0;
+        var id = 1;
+        var my_id = document.getElementById('liFinished');
+        var update_status = document.getElementById('update_status');
+        var update_row = document.getElementById('update_row');
+        var status_image = document.getElementById('status_image');
+        uploaddata();
+        function uploaddata() {
+            update_status.innerHTML = 'Batch '+(id) + ': Processing';
+            new Ajax.Request("<?php  echo $this->getUrl('etsy/product/startDraftSync');?>" +
+                'index/' + id, {
+                method: "post",
+                onSuccess: function (transport) {
+                    id++;
+                    var json = transport.responseText.evalJSON();
+                    if (json.success) {
+                        countOfSuccess++;
+                        var span = document.createElement('li');
+                        span.innerHTML = '<img class="v-middle" src="<?php
+                                echo $successImg ?>"><span class="text">Batch' + id-1 + ': ' + json.success +
+                            '</span>';
+                        span.id = 'id-' + id;
+                        update_row.parentNode.insertBefore(span, update_row);
+                    }
+                    if (json.error) {
+                        span = document.createElement('li');
+                        span.innerHTML = '<img class="v-middle" src="<?php
+                                echo $errorImg ?>"><span class="text">Batch' + id-1 + ': ' + json.error +
+                            '</span>';
+                        span.id = 'id-' + id;
+                        update_row.parentNode.insertBefore(span, update_row);
+                    }
+                    if (json.check) {
+                        uploaddata();
+                    } else {
+                        status_image.src = '<?php  echo $successImg ?>';
+                        span = document.createElement('li');
+                        span.innerHTML = '<img src="<?php
+                                echo $successImg ?>"><span id="update_status">' +
+                            countOfSuccess + ' Batch(s) Successfully Synced from Etsy to Magento Store.' + '</span>';
+                        my_id.parentNode.insertBefore(span, my_id);
+                        document.getElementById("liFinished").style.display = "block";
+                        update_status.innerHTML = 'Batch '+(id) + ': Successfully Processed';
+                        document.getElementById("wait_msg").hide();
+                    }
+                },
+                onFailure: function () {
+                    var span = document.createElement('li');
+                    span.innerHTML = '<img src="<?php  echo $errorImg ?>"><span>Something Went Wrong </span>';
+                    span.id = 'id-' + id;
+                    span.style = 'background-color:#FDD';
+                    update_row.parentNode.insertBefore(span, update_row);
+                    uploaddata();
+                }
+            });
+        }
+    });
+</script>

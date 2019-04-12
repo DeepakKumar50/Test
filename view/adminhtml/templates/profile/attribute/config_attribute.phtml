@@ -1,0 +1,514 @@
+<?php
+/**
+ * Copyright © 2016 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+/* @var $block \Magento\Catalog\Block\Adminhtml\Product\Edit\Tab\Price\Tier */
+$element = $block->getElement();
+$subcatattribute=$this->getAttributeResponse();
+
+?>
+<?php $_htmlId      = 'configAttributes' ?>
+<?php $_htmlClass   = 'configAttributeClass' ?>
+<?php $_htmlName    = 'variant_attributes' ?>
+<?php $_readonly    = false ?>
+
+<fieldset class="fieldset">
+    <div class="field" id="attribute-<?php /* @escapeNotVerified */ echo $_htmlId?>-container" data-attribute-code="<?php /* @escapeNotVerified */ echo $_htmlId?>"
+    >
+        <div class="control">
+            <table class="admin__control-table tiers_table" id="tiers_table">
+                <thead>
+                <tr>
+                    <th class="col-customer-group"><?php /* @escapeNotVerified */ echo __('Etsy Attribute') ?></th>
+                    <th class="col-qty required"><?php /* @escapeNotVerified */ echo __('Magento Catalog Attribute') ?></th>
+                    <th class="col-qty required"><?php /* @escapeNotVerified */ echo __('Default Value') ?></th>
+                    <th class="col-delete"><?php /* @escapeNotVerified */ echo __('Action') ?></th>
+                </tr>
+                </thead>
+                <tbody id="<?php /* @escapeNotVerified */ echo $_htmlId ?>_container"></tbody>
+                <tfoot>
+                <tr>
+                    <td colspan="4" class="col-actions-add"><?php echo $block->getChildHtml('add_button') ?></td>
+                </tr>
+                </tfoot>
+            </table>
+
+            <script>
+                require([
+                    'jquery',
+                    'Magento_Ui/js/modal/modal',
+                    'mage/template',
+                    "prototype",
+                    "mage/adminhtml/form"
+                ], function (jQuery, modal, mageTemplate) {
+//<![CDATA[
+                    var configAttributeRowTemplate = '<tr>'
+                        + '<input type="hidden" value="0" name="<?php echo $_htmlName ?>[<%- data.index %>][required]" id="config_attribute_row_<%- data.index %>_etsy_required" />'
+                        + '<input type="hidden" name="<?php echo $_htmlName ?>[<%- data.index %>][etsy_attribute_name]" id="config_attribute_row_<%- data.index %>_etsy_attribute_hidden" />'
+                        + '<input type="hidden" name="<?php echo $_htmlName ?>[<%- data.index %>][etsy_attribute_type]" id="config_attribute_row_<%- data.index %>_etsy_attribute_type" />'
+                        + '<input type="hidden" name="<?php echo $_htmlName ?>[<%- data.index %>][etsy_property_id]" id="config_attribute_row_<%- data.index %>_etsy_property_id" />'
+                        + '<input type="hidden" name="<?php echo $_htmlName ?>[<%- data.index %>][etsy_enum_val]" id="config_attribute_row_<%- data.index %>_etsy_enum_val" />'
+                        + '<td><select onChange="return configAttributeControl.showDefaultField(this, <%- data.index %>);" class="<?php
+                            echo $_htmlClass ?> custgroup required-entry" name="<?php echo $_htmlName ?>[<%- data.index %>][etsy_attribute_name]" id="config_attribute_row_<%- data.index %>_etsy_attribute">'
+                        <?php
+                        foreach ($this->getEtsyConfigAttributes($subcatattribute) as $code => $attribute){
+                        $attributeEnum = isset($attribute['etsy_enum'])?$attribute['etsy_enum']:'{}';
+                        $option_value =!empty($attribute['option_values'])?$attribute['option_values']:'{}';
+                        ?>
+                        + '<option  value="<?php echo $code ?>" enum_val=\'<?php echo addslashes($attributeEnum); ?>\' proprity_id="<?php echo $attribute['property_id'];?>" option_values=\'<?php echo addslashes($option_value); ?>\' attribute_type="<?php echo $attribute['etsy_attribute_type'] ?>"><?php echo __($attribute['etsy_attribute_name']) ?></option>'
+                        <?php }   ?>
+                        + '</select></td>'
+                        + '<td> <select  onChange="return configAttributeControl.showDefaultField(this, <%- data.index %>);" class="<?php echo $_htmlClass ?> required_magento_attr required-entry" name="<?php echo $_htmlName ?>[<%- data.index %>][magento_attribute_code]" id="config_attribute_row_<%- data.index %>_magento_attr">'
+                        <?php foreach ($this->getMagentoAttributes() as $_groupId=>$_groupName):
+                        $attributeEnum = $_groupName['input_type'];
+                        $attributeEnum = str_replace(' ', '', $attributeEnum);
+
+                        if($attributeEnum == 'select'){
+                        ?>
+                        + '<option option_values=\'<?php echo($_groupName['option_values'])?>\' value="<?php echo $_groupId ?>" enum_val=\'<?php echo addslashes($attributeEnum); ?>\' attribute_type="<?php echo $_groupName['attribute_type'] ?>"><?php echo __($_groupName['attribute_code']) ?></option>'
+                        <?php
+                        }else{
+                        ?>
+                        + '<option option_values=\'<?php echo($_groupName['option_values'])?>\' value="<?php echo $_groupId ?>" enum_val=\'<?php echo addslashes($attributeEnum); ?>\' attribute_type="<?php echo $_groupName['attribute_type'] ?>"><?php echo __($_groupName['attribute_code']) ?></option>'
+                        <?php
+                        }
+                        endforeach?>
+                        + '</select>'
+                        + ' </td>'
+                        + '<td><input style="display:none;" type="text" name="<?php /* @escapeNotVerified */ echo $_htmlName ?>[<%- data.index %>][default]" value="" id="config_attribute_row_<%- data.index %>_default_text" />'
+                        + '<select  style="display:none;" class="<?php echo $_htmlClass ?> config_attribute_row_ " name="<?php echo $_htmlName ?>[<%- data.index %>][default]" id="config_attribute_row_<%- data.index %>_default_select">'
+                        + '</select>'
+                        + '<td class="col-delete"><input type="hidden" name="<?php /* @escapeNotVerified */ echo $_htmlName ?>[<%- data.index %>][delete]" class="delete" value="" id="config_attribute_row_<%- data.index %>_delete" />'
+                        + '<input type="hidden" name="<?php echo $_htmlName ?>[<%- data.index %>][option_mapping]" id="config_attribute_row_<%- data.index %>_option_mapping"" value="{}" />'
+                        + '<input type="hidden" name="<?php echo $_htmlName ?>[<%- data.index %>][options]" id="config_attribute_row_<%- data.index %>_options"" />'
+                        + '<button title="<?php echo $block->escapeHtml(__("Map Select Options")) ?>" type="button" class="action-scalable map icon-btn map-attribute-option" id="config_attribute_row_<%- data.index %>_add_option_button" row_id="<%- data.index %>" id_prefix="config_attribute_row_" onclick="return configAttributeControl.mapOption(this);">'
+                        + '<span><?php /* @escapeNotVerified */ echo __("Map Options") ?></span></button>'
+                        + '<button title="<?php /* @escapeNotVerified */ echo $block->escapeHtml(__('Delete')); ?>" type="button" class="action- scalable delete icon-btn delete-product-option" id="config_attribute_row_<%- data.index %>_delete_button" onclick="return configAttributeControl.deleteItem(event);">'
+                        + '<span></span></button></td>'
+                        + '</tr>';
+                    updateTemplate(configAttributeRowTemplate);
+                    var configAttributeControl = {
+
+                        template: mageTemplate(configAttributeRowTemplate),
+                        itemsCount: 0,
+                        addItem : function () {
+                            <?php if ($_readonly):?>
+                            if (arguments.length < 3) {
+                                return;
+                            }
+                            <?php endif; ?>
+                            var data = {
+                                etsy_attribute: '',
+                                magento_attr: '',
+                                required: '',
+                                etsy_attribute_type: '',
+                                default:'',
+                                option_mapping: '{}',
+                                etsy_enum:'{}',
+                                property_id :'',
+                                index: this.itemsCount++,
+
+                            };
+                            if(arguments.length >= 7) {
+                                data._etsy_attribute = arguments[0];
+                                data._magento_attr      = arguments[1];
+                                data._etsy_attribute_type      = arguments[2];
+                                data.required        = arguments[3];
+                                data.default = arguments[4];
+                                data.option_mapping = arguments[5];
+                                data.etsy_enum=arguments[6];
+                                data.property_id=arguments[7];
+                            }
+                            var defaultValue='';
+                            Element.insert($('<?php /* @escapeNotVerified */ echo $_htmlId ?>_container'), {
+                                bottom : this.template({
+                                    data: data
+                                })
+                            });
+                            var etsyAttribute = $('config_attribute_row_' + data.index + '_etsy_attribute');
+                            var magentoAttribute = $('config_attribute_row_' + data.index + '_magento_attr');
+                            var optionValues = data.etsy_enum;
+
+                            optionMappingValues = optionValues;
+                            etsyAttribute.value = data._etsy_attribute;
+                            magentoAttribute.value    = data._magento_attr;
+                            $('config_attribute_row_' + data.index + '_option_mapping').value = data.option_mapping ;
+                           $('config_attribute_row_' + data.index + '_etsy_attribute_type').value    = data._etsy_attribute_type;
+                           $('config_attribute_row_' +data.index +'_etsy_property_id').value    = data.property_id;
+                           $('config_attribute_row_'+data.index +'_etsy_enum_val').value =  data.etsy_enum;
+                            if(data.required && data.required == 1 &&
+                                document.getElementById('config_attribute_row_' + data.index + '_magento_attr')) {
+                                if($('config_attribute_row_' + data.index + '_magento_attr').value == 'sku') {
+                                    document.getElementById('config_attribute_row_' + data.index + '_magento_attr').setAttribute('readOnly' , true);
+                                }
+                                $('config_attribute_row_' +data.index +'_delete_button').remove();
+                                $('config_attribute_row_' +data.index +'_etsy_attribute').disabled = true;
+                                $('config_attribute_row_' +data.index +'_etsy_attribute_hidden').value = data._etsy_attribute;
+                                $('config_attribute_row_' +data.index +'_etsy_required').value    = data.required;
+                                $('config_attribute_row_' +data.index +'_etsy_property_id').value    = data.property_id;
+
+                                this.toggleMapOption(data.index);
+                                $('config_attribute_row_' + data.index +'_etsy_attribute').disabled = true;
+                            } else {
+                                this.toggleMapOption(data.index);
+                            }
+
+                            <?php if ($_readonly): ?>
+                            $('<?php /* @escapeNotVerified */ echo $_htmlId ?>_container').select('input', 'select').each(this.disableElement);
+                            $('<?php /* @escapeNotVerified */ echo $_htmlId ?>_container').up('table').select('button').each(this.disableElement);
+                            <?php else: ?>
+                            $('<?php /* @escapeNotVerified */ echo $_htmlId ?>_container').select('input', 'select').each(function(el){ Event.observe(el, 'change', el.setHasChanges.bind(el)); });
+                            <?php endif; ?>
+
+                            configAttributeControl.setEtsyAttributeType(etsyAttribute, data.index);
+                            if(data.default !=''){
+                                var enumVal = etsyAttribute.options[data.index].getAttribute('enum_val');
+                                var text = $('config_attribute_row_'+data.index+'_default_text');
+                                var select = $('config_attribute_row_'+data.index+'_default_select');
+                                if(data.default == ''){
+                                    data.default = '';
+                                }
+
+                                var  defaultValue =  data.default;
+                                text.value = data.default;
+                                configAttributeControl.showDefaultField(magentoAttribute, data.index);
+                            }
+
+                        },
+                        disableElement: function(el) {
+                            el.disabled = true;
+                            el.addClassName('disabled');
+                        },
+                        deleteItem: function(event) {
+                            var tr = Event.findElement(event, 'tr');
+                            if (tr) {
+                                Element.select(tr, '.delete').each(function(elem){elem.value='1'});
+                                Element.select(tr, ['input', 'select']).each(function(elem){elem.remove()});
+                                Element.hide(tr);
+                                Element.addClassName(tr, 'no-display template');
+                            }
+                            return false;
+                        },
+                        showDefaultField: function (e, index) {
+                            var enumVal='';
+                            var checkdefault = e.options[e.selectedIndex].getAttribute('value');
+                            var text = $('config_attribute_row_'+index+'_default_text');
+                            var select = $('config_attribute_row_'+index+'_default_select');
+                            var mapButton = $('config_attribute_row_' + index + '_add_option_button');
+                            var etsyAttribute = $('config_attribute_row_' + index + '_etsy_attribute');
+                            if(etsyAttribute.options[etsyAttribute.selectedIndex]) {
+                                property_id = etsyAttribute.options[etsyAttribute.selectedIndex].getAttribute('proprity_id');
+                                attribute_type = etsyAttribute.options[etsyAttribute.selectedIndex].getAttribute('attribute_type');
+                                enumVal = etsyAttribute.options[etsyAttribute.selectedIndex].getAttribute('enum_val');
+                                $('config_attribute_row_' + index + '_etsy_property_id').value = property_id;
+                                $('config_attribute_row_' + index + '_etsy_attribute_type').value = attribute_type;
+                                $('config_attribute_row_' + index + '_etsy_enum_val').value = enumVal;
+
+                            }
+                            var magentoAttr = $('config_attribute_row_' + index + '_magento_attr');
+                            var magentoSelectedIndex = $('config_attribute_row_' + index + '_magento_attr').selectedIndex;
+                            var mEnumVal ='';
+                            if(magentoAttr.options[magentoAttr.selectedIndex]) {
+                                mEnumVal = magentoAttr.options[magentoAttr.selectedIndex].getAttribute('enum_val');
+                            }
+                            if(magentoSelectedIndex ==1){
+                                select.show();
+                                this.toggleDefault(index);
+                            }else {
+                                if (mEnumVal === 'select' && (enumVal !== '' || enumVal)) {
+                                    this.toggleMapOption(index);
+                                    select.hide();
+                                    text.hide();
+                                }
+                                else {
+                                    select.hide();
+                                    text.hide();
+                                    mapButton.disable();
+                                    Element.addClassName(mapButton, "disabled");
+
+                                }
+                            }
+                        },
+                        toggleMapOption: function (index) {
+                            // toggle disable/enable map option button
+                            var select = $('config_attribute_row_'+index+'_default_select');
+                            var etsySelectedIndex = $('config_attribute_row_' + index + '_etsy_attribute').selectedIndex;
+                            var magentoSelectedIndex = $('config_attribute_row_' + index + '_magento_attr').selectedIndex;
+                            var etsyAttributeOptions = "";
+                            var magentoAttributeOptions = "";
+                            if (etsySelectedIndex >= 0) {
+                                etsyAttributeOptions = $('config_attribute_row_' + index + '_etsy_attribute')
+                                    .options[etsySelectedIndex]
+                                    .getAttribute('option_values');
+                            }
+                            if (magentoSelectedIndex >= 2) {
+                                magentoAttributeOptions = $('config_attribute_row_' + index + '_magento_attr')
+                                    .options[magentoSelectedIndex]
+                                    .getAttribute('option_values');
+                            }
+                            var mapButton = $('config_attribute_row_' + index + '_add_option_button');
+                            if (etsyAttributeOptions !== "" && magentoAttributeOptions !== "" ) {
+                                if (
+                                    (etsyAttributeOptions !== null && (etsyAttributeOptions).length > 0) &&
+                                    (magentoAttributeOptions !== null &&(magentoAttributeOptions).length > 0)
+                                ) {
+                                    var select = $('config_attribute_row_' + index + '_default_select');
+                                    while (select.options.length > 0) {
+                                        select.remove(0);
+                                    }
+                                    var temp = {};
+                                    temp['value'] = etsyAttributeOptions;
+                                    etsyAttributeOptions = temp;
+                                    // add blank option
+                                    select.insert(new Element('option', {"value": ''}).update(' '));
+                                    for (i = 0; i < Object.keys(etsyAttributeOptions).length; i++) {
+                                        select.insert(new Element('option', {"value": etsyAttributeOptions['value'][i]})
+                                            .update(etsyAttributeOptions['value'][i]));
+                                    }
+                                    mapButton.enable();
+                                    select.hide();
+                                    Element.removeClassName(mapButton, "disabled");
+                                } else {
+                                    mapButton.disable();
+                                    select.hide();
+                                    Element.addClassName(mapButton, "disabled");
+                                }
+
+                            } else {
+                                mapButton.disable();
+                                select.hide();
+                                Element.addClassName(mapButton, "disabled");
+                            }
+                        },
+                        saveMapping: function (id, idPrefix) {
+                            if (id !== null) {
+                                var rows = $$('.attribute_option_row');
+                                var mapping = {};
+                                if (rows) {
+                                    rows.forEach(
+                                        function (element) {
+
+                                            var rowId = element.getAttribute('row_id');
+                                            if (rowId !== null) {
+                                                var etsyAttributeOption =
+                                                    $('option_' + rowId + '_etsy_attr_option').value;
+                                                var magentoAttributeOption =
+                                                    $('option_' + rowId + '_mage_attr_option').getAttribute('option_id');
+                                                if (etsyAttributeOption !== "") {
+                                                    mapping[magentoAttributeOption] =
+                                                        etsyAttributeOption === undefined ? "" : etsyAttributeOption;
+                                                }
+                                            }
+                                        }
+                                    );
+                                }
+                                var mappedOption = $(idPrefix + id + '_option_mapping');
+                                if (mappedOption) {
+                                    mappedOption.setAttribute('value', JSON.stringify(mapping));
+                                }
+                            }
+                        },
+                        mapOption: function (self) {
+                            $('attributeOption2_container').update('');
+                            var id = self.getAttribute("row_id");
+                            var idPrefix = self.getAttribute("id_prefix");
+                            var loadOptionsMapping = $(idPrefix + id + '_option_mapping').value;
+                            try{
+                                loadOptionsMapping = JSON.parse(loadOptionsMapping);
+                            } catch (e){
+                                loadOptionsMapping='{}';
+                                console.log(e);
+                            }
+                            var magentoOptions = '[]';
+                            var etsyOptions = '[]';
+                            if ($(idPrefix + id + "_magento_attr").selectedIndex >= 0 &&
+                                $(idPrefix + id + "_etsy_attribute").selectedIndex >= 0) {
+                                magentoOptions = JSON.parse($(idPrefix + id + "_magento_attr").options[$(idPrefix + id + "_magento_attr").selectedIndex].getAttribute('option_values'));
+                                etsyOptions =JSON.parse( $(idPrefix + id + "_etsy_attribute").options[$(idPrefix + id + "_etsy_attribute").selectedIndex].getAttribute('enum_val'));
+                            }
+                            setEtsyOptions(etsyOptions);
+                            //populate magento attribute
+                            for (var option in magentoOptions) {
+                                if (magentoOptions.hasOwnProperty(option)) {
+                                    if(magentoOptions[option].label == ' ') {
+                                        continue;
+                                    }
+                                    optionMappingControl.initialize();
+                                    optionMappingControl.addItem(
+                                        magentoOptions[option],
+                                        loadOptionsMapping[magentoOptions[option].label]
+                                    );
+                                }
+                            }
+                            var options = {
+                                type: 'popup',
+                                responsive: true,
+                                innerScroll: true,
+                                title: '<?php echo __("Map Magento Attribute Options") ?>',
+                                buttons: [{
+                                    text: jQuery.mage.__('Save'),
+                                    class: '',
+                                    click: function () {
+                                        configAttributeControl.saveMapping(id, idPrefix);
+                                        this.closeModal();
+                                    }
+                                }]
+                            };
+
+                            var popup = modal(options, jQuery('#popup-modal-custom'));
+                            popup.openModal();
+
+                        },
+                        toggleDefault: function (index ) {
+                            var defaultValue='';
+                            var etsyAttribute = $('config_attribute_row_' + index + '_etsy_attribute');
+                            var magentoSelectedIndex = $('config_attribute_row_' + index + '_magento_attr').selectedIndex;
+                            var etsyAttributeOptions = "";
+                            if (etsyAttribute.selectedIndex >= 0) {
+                                etsyAttributeOptions = etsyAttribute.options[etsyAttribute.selectedIndex]
+                                    .getAttribute('enum_val');
+                            }
+                            var select = $('config_attribute_row_' + index + '_default_select');
+                            var text = $('config_attribute_row_' + index + '_default_text');
+                            if (etsyAttributeOptions != "") {
+                                etsyAttributeOptions = JSON.parse(etsyAttributeOptions);
+                                $('config_attribute_row_' + index + '_options').value = etsyAttributeOptions;
+                                if (etsyAttributeOptions !== null && Object.keys(etsyAttributeOptions).length > 0) {
+                                    while (select.options.length > 0) {
+                                        select.remove(0);
+                                    }
+                                    var temp = {};
+                                    temp['value'] = etsyAttributeOptions;
+                                    etsyAttributeOptions = temp;
+                                    // add blank option
+                                    select.insert(new Element('option', {"value": ''}).update(' '));
+                                    for (i = 0; i < etsyAttributeOptions['value'].length; i++) {
+                                        if(etsyAttributeOptions['value'][i] == defaultValue){
+                                            var option = new Element('option', {"value": etsyAttributeOptions['value'][i]});
+                                            option.setAttribute ("selected", true);
+                                            select.insert(option
+                                                .update(etsyAttributeOptions['value'][i]));
+                                        }else{
+                                            select.insert(new Element('option', {"value": etsyAttributeOptions['value'][i]})
+                                                .update(etsyAttributeOptions['value'][i]));
+                                        }
+                                    }
+                                    if (magentoSelectedIndex === 1) {
+                                        select.enable();
+                                        select.show();
+                                        text.disable();
+                                        text.hide();
+                                    }
+
+                                } else if (magentoSelectedIndex === 1) {
+                                    select.disable();
+                                    select.hide();
+                                    text.enable();
+                                    text.show();
+                                }
+                            } else {
+                                select.disable();
+                                select.hide();
+                                text.enable();
+                                text.show();
+                            }
+                        },
+                        setEtsyAttributeType: function(e, index) {
+                            if(e.selectedIndex!=-1){
+                                var attributeType = e.options[e.selectedIndex].getAttribute('attribute_type');
+                                $('config_attribute_row_' + index + '_etsy_attribute_type').value    = attributeType;
+                                var enumVal = e.options[e.selectedIndex].getAttribute('enum_val');
+                                var text = $('config_attribute_row_'+index+'_default_text');
+                                var select = $('config_attribute_row_'+index+'_default_select');
+                                select.hide();
+                                text.hide();
+                                select.disable();
+                                text.disable();
+                                if(enumVal){
+                                    var values = JSON.parse(enumVal);
+                                    while (select.options.length > 0) {
+                                        select.remove(0);
+                                    }
+                                    $('config_attribute_row_' + index + '_options').value = values;
+                                    for(key in values) {
+                                        if(values.hasOwnProperty(key)) {
+                                            var value = values[key];
+                                            select.insert(new Element('option', {"value": value}).update(value));
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    };
+
+
+                <?php
+                    $EtsyAttributeValue=$this->getEtsyAttributeValuesMapping();
+                    if(isset($EtsyAttributeValue['data'])){
+                    foreach ($EtsyAttributeValue['data'] as $id => $_item):
+                    $default = '';
+                    $optionMappedValues = isset($_item['option_values']) ?
+                        $_item['option_values'] : '{}';
+                    if(isset($_item['default']) && !empty($_item['default'])){
+                        $default = $_item['default'];
+                    }
+                    if(isset($EtsyAttributeValue['profile_id']) && !empty($EtsyAttributeValue['profile_id'])){
+                    ?>
+
+                    configAttributeControl.addItem(
+                        '<?php echo $_item['etsy_attribute_name'] ?>',
+                        '<?php echo $_item['magento_attribute_code'] ?>',
+                        '<?php echo $_item['etsy_attribute_type'] ?>',
+                        '<?php echo $_item['required'] ?>',
+                        '<?php echo $default; ?>',
+                        '<?php echo $optionMappedValues; ?>',
+                        '<?PHP echo $_item['etsy_enum'] ?>',
+                        '<?php echo $_item['property_id'] ?>',
+                    );
+                    <?php  } endforeach; }?>
+                    window.configAttributeControl = configAttributeControl;
+                });
+                function updateTemplate(configAttributeRowTemplate) {
+                    template = configAttributeRowTemplate;
+                }
+            </script>
+        </div>
+    </div>
+    <style>
+        .delete-product-option :before {
+            -webkit-font-smoothing: antialiased;
+            font-size: 1.8rem;
+            line-height: inherit;
+            color: #9e9e9e;
+            content: '\e630';
+            font-family: 'Admin Icons';
+            margin: -2px 0 0;
+            vertical-align: middle;
+            display: inline-block;
+            font-weight: normal;
+            overflow: hidden;
+            speak: none;
+            text-align: center;
+        }
+        .delete-product-option {
+            margin-right: 5px;
+            background: none;
+            border: none;
+        }
+
+        .default-text, .default-select {
+            width: 140px !important;
+        }
+
+        .requiredAttributeClass, .configAttributeClass {
+            max-width: 230px;
+            margin-left: 5px;
+        }
+        .required_etsy_attr {
+            width: 100%;
+        }
+    </style>

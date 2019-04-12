@@ -1,0 +1,20 @@
+@etsy-icons-admin__font-name-path: '@{baseDir}Ced_Etsy/fonts/etsy';
+@etsy-icons-admin__font-name : 'CedEtsy';
+.lib-font-face(
+  @family-name:@etsy-icons-admin__font-name,
+  @font-path: @etsy-icons-admin__font-name-path,
+  @font-weight: normal,
+  @font-style: normal
+);
+.admin__menu .item-etsy.parent.level-0 > a:before {
+  font-family: @etsy-icons-admin__font-name;
+  content: "\e901";
+  display: block;
+  font-family: "CedEtsy";
+  height: 3rem;
+}
+.cedcommerce.actions.delete:before {
+  display: inline-block;
+  content: url('@{baseDir}Ced_Etsy/images/action/delete.svg');
+  height:16px;
+}

@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * CedCommerce
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End User License Agreement(EULA)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://cedcommerce.com/license-agreement.txt
+ *
+ * @category    Ced
+ * @package     Ced_Etsy
+ * @author      CedCommerce Core Team <connect@cedcommerce.com>
+ * @copyright   Copyright CEDCOMMERCE(http://cedcommerce.com/)
+ * @license     http://cedcommerce.com/license-agreement.txt
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="sales_order_shipment_save_after">
+        <observer name="ced_etsy_shipment" instance="Ced\Etsy\Observer\Shipment"/>
+    </event>
+    <event name="sales_order_shipment_resource_save_after">
+        <observer name="ced_etsy_shipment_resource" instance="Ced\Etsy\Observer\Shipment"/>
+    </event>
+    <event name="controller_action_predispatch">
+        <observer name="ced_etsy_controller_action_predispatch" instance="Ced\Etsy\Observer\Predispatch" />
+    </event>
+   <!--  <event name="layout_load_before">
+        <observer name="layout_load_before_cedcommerce" instance="Ced\Etsy\Observer\BeforeLoadLayout" />
+    </event> -->
+    <event name="catalog_product_save_after">
+        <observer name="ced_etsy_product_save_after" instance="Ced\Etsy\Observer\ProductSaveAfter"/>
+    </event>
+    <!-- <event name="cataloginventory_stock_item_save_after">
+        <observer name="ced_etsy_inventory_save" instance="Ced\Etsy\Observer\StockSaveAfter"/>
+    </event> -->
+</config>
